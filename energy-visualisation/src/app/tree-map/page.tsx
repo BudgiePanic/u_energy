@@ -49,7 +49,7 @@ interface HoverData { // mouse hover event data structure
 
 const allNodes: Map<string, Map<string, CountryNode[]>> = new Map();
 
-export const TreeMap = () => {
+export default function TreeMap(){
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [years, setYears] = useState<string[]>([]);
   const [year, setYear] = useState<number>(2022);
@@ -400,8 +400,4 @@ export const TreeMap = () => {
       </div>
     </div>
   );
-
-
 };
-
-export default TreeMap;

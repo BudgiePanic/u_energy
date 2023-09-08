@@ -73,7 +73,7 @@ interface Country {
 }
 
 // export a component that has a div with header inside that says countries
-export const SimilarCountriesPage = () => {
+export default function SimilarCountriesPage() {
   const [selectedCountry, setSelectedCountry] = useState<Country>(null as any);
   const [years, setYears] = useState<string[]>([]);
   const [year, setYear] = useState<string>("2022");
@@ -88,19 +88,6 @@ export const SimilarCountriesPage = () => {
 
   // This log message currently appears in both the web browser console and the server console
   console.log("Hello from SimilarCountriesPage");
-
-  // hide the details on demand if the user clicks outside of the popup
-  document
-    .getElementById("visualization")
-    ?.addEventListener("click", (event) => {
-      // check if we clicked inside the country details popup
-      var clicked = event.target as HTMLElement;
-      var typeOfClicked: string = clicked.tagName;
-      if (typeOfClicked !== "circle") {
-        setSelectedCountry(null as any);
-        if (selectedMethod !== "") setSelectedMethod("");
-      }
-    });
 
   // This function is called once when the page loads, it runs on the client browser.
   useEffect(() => {
@@ -188,63 +175,6 @@ export const SimilarCountriesPage = () => {
       var edges: any[] = [];
 
       /**
-       * Use the euclidean distance formula to calculate the similarity between two countries. Copilot is a G.
-       * @param countryA
-       * @param countryB
-       * @returns The euclidean distance between countryA and countryB
-       */
-      const calculateCountrySimilarityEuclidean = (
-        countryA: string,
-        countryB: string
-      ) => {
-        var similarity: number = 0;
-        // for each energy production method
-        productionMethods.forEach((method) => {
-          // get the instances for countryA and countryB
-          const countryAInstances = instances.filter(
-            (d) => String(d.COUNTRY) === countryA
-          );
-          const countryBInstances = instances.filter(
-            (d) => String(d.COUNTRY) === countryB
-          );
-          // get the instances for countryA and countryB for the current method
-          const countryAMethodInstances = countryAInstances.filter(
-            (d) => String(d.PRODUCT) === method
-          );
-          const countryBMethodInstances = countryBInstances.filter(
-            (d) => String(d.PRODUCT) === method
-          );
-          // get the total amount of energy produced for countryA and countryB for the current method
-          const countryAMethodTotal = countryAMethodInstances.reduce(
-            (a, b) => a + Number(b.VALUE),
-            0
-          );
-          const countryBMethodTotal = countryBMethodInstances.reduce(
-            (a, b) => a + Number(b.VALUE),
-            0
-          );
-          // calculate the difference between the two countries for the current method
-          const difference: number = countryAMethodTotal - countryBMethodTotal;
-          // square the difference
-          const squaredDifference: number = Math.pow(difference, 2);
-          // calculate the range of the current method
-          const range: number =
-            Math.max(countryAMethodTotal, countryBMethodTotal) -
-            Math.min(countryAMethodTotal, countryBMethodTotal);
-          if (range === 0 || squaredDifference === 0) {
-            // skip this method
-            return;
-          }
-          // divide the squared difference by the squared range
-          const normalizedDifference: number =
-            squaredDifference / Math.pow(range, 2);
-          // add the normalized difference to the similarity
-          similarity += normalizedDifference;
-        });
-        return similarity;
-      };
-
-      /**
        * Checks if two countries share any energy generation methods in common
        * @param countryA
        * @param countryB
@@ -278,31 +208,6 @@ export const SimilarCountriesPage = () => {
       };
 
       /**
-       * Checks if two countries share the same top energy generation method
-       * @param countryA
-       * @param countryB
-       * @returns true if countryA and countryB share the same top energy generation method, false otherwise
-       */
-      const checkSameTopGenerationMethod = (
-        countryA: string,
-        countryB: string
-      ) => {
-        var countryAInstances = countryTotals.filter(
-          (d) => d.country === countryA
-        );
-        var countryBInstances = countryTotals.filter(
-          (d) => d.country === countryB
-        );
-        var countryAProduct = countryAInstances[0].biggestProducer;
-        var countryBProduct = countryBInstances[0].biggestProducer;
-        if (countryAProduct === countryBProduct) {
-          return true;
-        } else {
-          return false;
-        }
-      };
-
-      /**
        * Countries that generated a similar amount of GWh will have larger similarity score.
        * @param countryA
        * @param countryB
@@ -325,13 +230,6 @@ export const SimilarCountriesPage = () => {
           largestCountryTotal.amount - smallestCountryTotal.amount;
         var normalizedDifference: number = difference / range;
         return 3 * (1 - normalizedDifference); // This causes countries with a large difference in energy production to have a thin edge connecting them
-      };
-
-      const calculateCountrySimilarityExotic: (
-        countryA: string,
-        countryB: string
-      ) => number = (countryA: string, countryB: string) => {
-        return 0;
       };
 
       const shouldCountriesHaveEdge: (
@@ -570,6 +468,7 @@ export const SimilarCountriesPage = () => {
       // This causes a type error but I don't know how to solve it. The actual code works fine, so I'm just ignoring the error here.
       // @ts-ignore
       node.call(
+        // @ts-ignore
         d3
           .drag()
           .on("start", dragstarted)
@@ -611,6 +510,23 @@ export const SimilarCountriesPage = () => {
     });
   }, [year, similarityThreshold, selectedMethod]);
   /*This argument causes this function to be recalled if the selected year or similarity threshold changes*/
+
+  if(typeof(document) === "undefined"){
+    return <>Loading...</>
+  }
+
+  // hide the details on demand if the user clicks outside of the popup
+  document
+    .getElementById("visualization")
+    ?.addEventListener("click", (event) => {
+      // check if we clicked inside the country details popup
+      var clicked = event.target as HTMLElement;
+      var typeOfClicked: string = clicked.tagName;
+      if (typeOfClicked !== "circle") {
+        setSelectedCountry(null as any);
+        if (selectedMethod !== "") setSelectedMethod("");
+      }
+    });
 
   return (
     <div className=" flex flex-row pt-44 h-screen px-2 w-full items-center overflow-hidden">
@@ -679,41 +595,40 @@ export const SimilarCountriesPage = () => {
         {/*The button to export current year's JSON*/}
 
         <div className="flex flex-row justify-between">
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
-              onClick={() => {
-                let dataObj = {
-                  similarityThreshold: similarityThreshold,
-                  countries: exportableCountries.map((c: any) => {
-                    return {
-                      country: c.country,
-                      biggestProducer: c.biggestProducer,
-                      amount: c.amount,
-                      totalEnergy: c.totalEnergy,
-                    };
-                  }),
-                  edges: exportableEdges.map((e: any) => {
-                    return {
-                      source: e.source,
-                      target: e.target,
-                      value: e.value,
-                    };
-                  }),
-                };
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
+            onClick={() => {
+              let dataObj = {
+                similarityThreshold: similarityThreshold,
+                countries: exportableCountries.map((c: any) => {
+                  return {
+                    country: c.country,
+                    biggestProducer: c.biggestProducer,
+                    amount: c.amount,
+                    totalEnergy: c.totalEnergy,
+                  };
+                }),
+                edges: exportableEdges.map((e: any) => {
+                  return {
+                    source: e.source,
+                    target: e.target,
+                    value: e.value,
+                  };
+                }),
+              };
 
-                // Convert to a JSON string with indentation
-                let dataStr = JSON.stringify(dataObj, null, 2);
+              // Convert to a JSON string with indentation
+              let dataStr = JSON.stringify(dataObj, null, 2);
 
-                const blob = new Blob([dataStr], {
-                  type: "text/plain;charset=utf-8",
-                });
+              const blob = new Blob([dataStr], {
+                type: "text/plain;charset=utf-8",
+              });
 
-                saveAs(blob, `${year}_production_group_nodes.json`);
-              }}
-            >
-              Export Graph as JSON
-            </button>
-         
+              saveAs(blob, `${year}_production_group_nodes.json`);
+            }}
+          >
+            Export Graph as JSON
+          </button>
         </div>
 
         <div id="color-map" className="flex-grow flex flex-col space-y-1">
@@ -812,6 +727,4 @@ export const SimilarCountriesPage = () => {
       </div>
     </div>
   );
-};
-
-export default SimilarCountriesPage;
+}

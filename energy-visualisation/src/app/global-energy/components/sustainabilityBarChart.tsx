@@ -71,7 +71,9 @@ const SustainabilityBarChart: React.FC<SustainabilityBarChartProps> = ({
       const yAxis = d3.axisLeft(yScale);
       const xAxis = d3.axisBottom(xScale);
 
+      // @ts-ignore
       svg.select('.y-axis').call(yAxis);
+      // @ts-ignore
       svg.select('.x-axis').call(xAxis);
 
       svg.select('.x-axis')
@@ -114,6 +116,7 @@ const SustainabilityBarChart: React.FC<SustainabilityBarChartProps> = ({
     updateAxes();
 
     // Select split bars
+    // @ts-ignore
     const bars = svg.select('g').selectAll('.bar-group').data(data, d => d.id);
 
     // Enter selection

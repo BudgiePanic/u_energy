@@ -46,6 +46,7 @@ declare module "@mui/material/Button" {
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [theme, setTheme] = useState<Theme>(() => {
+    if(typeof window === "undefined") return "light";
     const localTheme = window.localStorage.getItem("theme") as Theme;
     return localTheme ?? "light";
   });

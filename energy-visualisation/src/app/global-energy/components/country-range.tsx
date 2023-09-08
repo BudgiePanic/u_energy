@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+// @ts-ignore
 import RangeSlider from 'react-range-slider-input';
 import './styles.css';
 import 'react-range-slider-input/dist/style.css';

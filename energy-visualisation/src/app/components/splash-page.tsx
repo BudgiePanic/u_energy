@@ -66,11 +66,14 @@ const Root = styled("div")<{ theme?: Theme | string }>(({ theme }) => ({
 export default function SplashPage({}: {}) {
   const { theme } = useContext(ThemeContext);
   return (
+    // @ts-ignore
     <Root className="w-full h-screen" theme={theme}>
+       {/* @ts-ignore */}
       <Header theme={theme}>U.eNergy</Header>
         <LightningIconWrapper>
             <FlashOnIcon sx={{ fontSize: 48, color: "#f0c919" }} />
         </LightningIconWrapper>
+        {/* @ts-ignore */}
         <Capabilities theme={theme} variant="h2">Capabilities</Capabilities>
         <Grid container direction="column" spacing={3}>
           <Grid item>
