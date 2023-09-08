@@ -7,7 +7,6 @@ import CountryRange from './components/country-range';
 import CountryTooltip from './components/country-tooltip';
 import { loadCSVData, createCountryData } from '../country/utils';
 import { EnergyProductionData } from '../country/interfaces';
-import CountryRange from './components/country-range';
 
 const productionMethods: string[] = ["Hydro", "Nuclear", "Solar", "Wind", "Other renewables", "Natural gas", "Coal", "Oil"];
 const productionColors: string[] = ["#1F77B4", "#FEF502", "#F4BF3A", "#D1F1F9", "#79E381", "#DE2A2A", "#000000", "#6A4848"];
