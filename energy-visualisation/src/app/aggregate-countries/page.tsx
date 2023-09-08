@@ -7,7 +7,6 @@ import CountryRange from './components/country-range';
 import CountryTooltip from './components/country-tooltip';
 import { loadCSVData, createCountryData } from '../country/utils';
 import { EnergyProductionData } from '../country/interfaces';
-import { createCountryData } from '../country/utils';
 import CountryRange from './components/country-range';
 
 const productionMethods: string[] = ["Hydro", "Nuclear", "Solar", "Wind", "Other renewables", "Natural gas", "Coal", "Oil"];
