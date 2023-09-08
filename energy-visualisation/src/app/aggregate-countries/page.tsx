@@ -7,7 +7,6 @@ import CountryRange from './components/country-range';
 import CountryTooltip from './components/country-tooltip';
 import { loadCSVData, createCountryData } from '../country/utils';
 import { EnergyProductionData } from '../country/interfaces';
-import { loadCSVData } from '../country/utils';
 import { createCountryData } from '../country/utils';
 import CountryRange from './components/country-range';
 
